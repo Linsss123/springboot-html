@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Redigera bok</title>
+    <style>
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 2rem; }
+        .form { max-width: 680px; }
+        .row { margin-bottom: .75rem; }
+        label { display: block; font-weight: 600; margin-bottom: .25rem; }
+        input[type="text"], input[type="date"], textarea { width: 100%; padding: .5rem; border: 1px solid #d1d5db; border-radius: 4px; }
+        .errors { color: #b91c1c; font-size: .9rem; margin-top: .25rem; }
+        .actions { margin-top: 1rem; }
+        .btn { display: inline-block; background: #2563eb; color: #fff; padding: .5rem .75rem; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
+        .btn:hover { background: #1d4ed8; }
+        .link { margin-left: .5rem; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .muted { color: #6b7280; }
+    </style>
+    <script>
+        // För bättre UX kan vi i framtiden lägga till client-side förbättringar här
+    </script>
+</head>
+<body>
+
+<div class="topbar">
+    <h1>Redigera bok</h1>
+    <a th:href="@{/books}">Tillbaka till lista</a>
+</div>
+
+<form class="form" th:action="@{'/books/' + ${updateBook.id} + '/edit'}" th:object="${updateBook}" method="post" novalidate>
+
+    <div class="row muted">
+        <label for="id">ID</label>
+        <input id="id" type="text" th:value="*{id}" readonly/>
+    </div>
+
+    <div class="row">
+        <label for="title">Titel</label>
+        <input id="title" type="text" th:field="*{title}" placeholder="Ange titel"/>
+        <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Fel</div>
+    </div>
+
+    <div class="row">
+        <label for="author">Författare</label>
+        <input id="author" type="text" th:field="*{author}" placeholder="Ange författare"/>
+        <div class="errors" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Fel</div>
+    </div>
+
+    <div class="row">
+        <label for="publishedDate">Publiceringsdatum</label>
+        <input id="publishedDate" type="date" th:field="*{publishedDate}"/>
+        <div class="errors" th:if="${#fields.hasErrors('publishedDate')}" th:errors="*{publishedDate}">Fel</div>
+    </div>
+
+    <div class="row">
+        <label for="isbn">ISBN</label>
+        <input id="isbn" type="text" th:field="*{isbn}" placeholder="Ange ISBN"/>
+        <div class="errors" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}">Fel</div>
+    </div>
+
+    <div class="row">
+        <label for="description">Beskrivning</label>
+        <textarea id="description" rows="4" th:field="*{description}" placeholder="Kort beskrivning"></textarea>
+        <div class="errors" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Fel</div>
+    </div>
+
+    <div class="actions">
+        <button type="submit" class="btn">Spara ändringar</button>
+        <a class="link" th:href="@{/books}">Avbryt</a>
+    </div>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Böcker</title>
+    <style>
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f3f4f6; text-align: left; }
+        .actions a { margin-right: .5rem; }
+        .empty { color: #6b7280; font-style: italic; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .btn { display: inline-block; background: #2563eb; color: #fff; padding: .5rem .75rem; text-decoration: none; border-radius: 4px; }
+        .btn:hover { background: #1d4ed8; }
+    </style>
+    <!-- Thymeleaf layout kept minimal for the first step -->
+    <!-- Optional: <link rel="stylesheet" th:href="@{/css/app.css}"> -->
+</head>
+<body>
+
+<div class="topbar">
+    <h1>Lista över böcker</h1>
+    <a class="btn" th:href="@{/books/new}">Ny bok</a>
+</div>
+
+<form method="get" th:action="@{/books}" style="margin-bottom:1rem; display:flex; gap:.5rem; align-items:center;">
+    <input type="text" name="q" th:value="${q}" placeholder="Sök titel eller författare" style="flex:1; padding:.5rem; border:1px solid #d1d5db; border-radius:4px;"/>
+    <button type="submit" class="btn">Sök</button>
+</form>
+
+<div th:if="${#lists.isEmpty(books)}" class="empty">Inga böcker ännu.</div>
+
+<table th:if="${!#lists.isEmpty(books)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Titel</th>
+        <th>Författare</th>
+        <th>Publicerad</th>
+        <th>ISBN</th>
+        <th>Beskrivning</th>
+        <th>Åtgärder</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="b : ${books}">
+        <td th:text="${b.id}">1</td>
+        <td th:text="${b.title}">Titel</td>
+        <td th:text="${b.author}">Författare</td>
+        <td th:text="${b.publishedDate}">2024-01-01</td>
+        <td th:text="${b.isbn}">1234567890</td>
+        <td th:text="${b.description}">Beskrivning</td>
+        <td class="actions">
+            <a th:href="@{'/books/' + ${b.id} + '/edit'}">Redigera</a>
+            <form th:action="@{'/books/' + ${b.id} + '/delete'}" method="post" style="display:inline" onsubmit="return confirm('Är du säker på att du vill ta bort denna bok?');">
+                <button type="submit" style="background:none;border:none;color:#dc2626;cursor:pointer;padding:0;">Ta bort</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+    
+</table>
+
+<div th:if="${page != null}" style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+    <div>
+        Sida <span th:text="${page.number + 1}">1</span> av <span th:text="${page.totalPages}">1</span> — Totalt <span th:text="${page.totalElements}">0</span> böcker
+    </div>
+    <div style="display:flex; gap:.5rem;">
+        <a th:if="${!page.first}"
+           th:href="@{/books(page=${page.number - 1}, size=${page.size}, q=${q})}"
+           class="btn">Föregående</a>
+        <a th:if="${!page.last}"
+           th:href="@{/books(page=${page.number + 1}, size=${page.size}, q=${q})}"
+           class="btn">Nästa</a>
+    </div>
+    
+</div>
+
+</body>
+</html>
