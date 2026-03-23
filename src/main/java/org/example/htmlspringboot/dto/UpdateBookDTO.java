@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 public class UpdateBookDTO {
 
-    // ID kommer normalt från path eller hidden field i formulär
     private Long id;
 
     @NotBlank
@@ -25,7 +24,6 @@ public class UpdateBookDTO {
     @Size(max = 120)
     private String author;
 
-    // ISBN kan vara redigerbart, men hålls unikt av service-lagret
     @NotBlank
     @Size(min = 10, max = 17)
     private String isbn;
